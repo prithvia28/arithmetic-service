@@ -4,8 +4,8 @@ test('2 + 3 is equal 5', () =>{
     expect(add(2,3)).toBe(5);
 })
 
-test('2 + 10 is equal 13', () =>{
-    expect(add(2,13)).toBe(13);
+test('2 + 10 is equal 12', () =>{
+    expect(add(2,10)).toBe(12);
 })
 
 test('2099999999999999999 + 30000000000000 is equal to 5', () => {
