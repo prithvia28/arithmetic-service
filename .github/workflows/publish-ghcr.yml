@@ -18,7 +18,7 @@ jobs:
           docker build -t ghcr.io/prithvia28/arithmetic-service:latest --file Dockerfile .  
           docker push ghcr.io/prithvia28/arithmetic-service:latest
       
-      - name: Publish the image to github container registry
+      - name: Publish the image to azure container registry
         run: |
           docker login --username practicum16crpithvi --password ${{secrets.AZURE_CONTAINER_REGISTRY}} practicum16crpithvi.azurecr.io
           docker tag ghcr.io/prithvia28/arithmetic-service:latest practicum16crpithvi.azurecr.io/arithmetic-service:latest
