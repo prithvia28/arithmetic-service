@@ -6,6 +6,12 @@ on:
 jobs:
   build_and_publish:
     runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ github.sha }}
+      CONTAINER_REGISTRY: ${{ secrets.AZURE_CONTAINER_REGISTRY }}
+      CONTAINER_REGISTRY_UN: ${{ secrets.CONTAINER_REGISTRY_UN }}
+      CONTAINER_REGISTRY_PW: ${{ secrets.CONTAINER_REGISTRY_PW }}
+
     steps:
       - uses: actions/checkout@v3
       - name: npm install
@@ -20,6 +26,13 @@ jobs:
       
       - name: Publish the image to azure container registry
         run: |
-          docker login --username practicum16crpithvi --password ${{secrets.AZURE_CONTAINER_REGISTRY}} practicum16crpithvi.azurecr.io
-          docker tag ghcr.io/prithvia28/arithmetic-service:latest practicum16crpithvi.azurecr.io/arithmetic-service:latest
-          docker push practicum16crpithvi.azurecr.io/arithmetic-service:latest
+          docker login --username $CONTAINER_REGISTRY_UN --password $CONTAINER_REGISTRY_PW $CONTAINER_REGISTRY
+          docker tag ghcr.io/prithvia28/arithmetic-service:$VERSION $CONTAINER_REGISTRY/arithmetic-service:$VERSION
+          docker push $CONTAINER_REGISTRY/arithmetic-service:$VERSION
+
+      - uses: tale/kubectl-action@v1
+        with:
+          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+
+      - name: Deploy
+        run: ./deploy.sh
